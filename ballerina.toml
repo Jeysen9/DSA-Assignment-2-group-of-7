@@ -1,0 +1,26 @@
+[package]
+org = "smart_ticketing"
+name = "smart_ticketing_system"
+version = "1.0.0"
+
+[[platform.java11.dependency]]
+groupId = "com.microsoft.sqlserver"
+artifactId = "mssql-jdbc"
+version = "11.2.0.jre11"
+
+[[platform.java11.dependency]]
+groupId = "org.springframework.kafka"
+artifactId = "spring-kafka"
+version = "2.8.0"
+
+[dependencies]
+"ballerina/sql" = "1.6.0"
+"ballerina/java.jdbc" = "1.6.0"
+"ballerina/http" = "2.6.0"
+"ballerina/kafka" = "4.6.0"
+"ballerina/log" = "2.6.0"
+"ballerina/io" = "1.3.0"
+"ballerina/time" = "2.2.0"
+
+[build-options]
+observabilityIncluded = true
