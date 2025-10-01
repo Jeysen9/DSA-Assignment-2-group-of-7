@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "Waiting for Kafka to be ready..."
+sleep 30
+
+# Create Kafka topics using Docker exec (run this after Kafka container is up)
+docker exec -it smart-ticketing-system-kafka-1 kafka-topics --create --if-not-exists --bootstrap-server localhost:9092 --topic ticket.requests --partitions 3 --replication-factor 1
+docker exec -it smart-ticketing-system-kafka-1 kafka-topics --create --if-not-exists --bootstrap-server localhost:9092 --topic payments.processed --partitions 3 --replication-factor 1
+docker exec -it smart-ticketing-system-kafka-1 kafka-topics --create --if-not-exists --bootstrap-server localhost:9092 --topic schedule.updates --partitions 3 --replication-factor 1
+docker exec -it smart-ticketing-system-kafka-1 kafka-topics --create --if-not-exists --bootstrap-server localhost:9092 --topic ticket.validations --partitions 3 --replication-factor 1
+docker exec -it smart-ticketing-system-kafka-1 kafka-topics --create --if-not-exists --bootstrap-server localhost:9092 --topic notifications --partitions 3 --replication-factor 1
+
+echo "All Kafka topics created successfully!"
