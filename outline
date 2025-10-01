@@ -1,0 +1,18 @@
+smart-ticketing-system/
+├── docker-compose.yml
+├── kafka-setup/
+│   └── create-topics.sh
+├── Ballerina.toml
+├── main.bal (Main entry point)
+├── config.bal (Configuration & constants)
+├── models.bal (All data models/records)
+├── database.bal (Database setup & utilities)
+├── kafka_clients.bal (Kafka producers/consumers)
+├── services/
+│   ├── passenger_service.bal
+│   ├── transport_service.bal
+│   ├── ticketing_service.bal
+│   ├── payment_service.bal
+│   ├── notification_service.bal
+│   └── admin_service.bal
+└── Dockerfile
