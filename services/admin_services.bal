@@ -12,7 +12,7 @@ service /api/admin on new http:Listener(ADMIN_SERVICE_PORT) {
         return {body: "Disruption announcement published successfully"};
     }
     
-    // Publish general announcement  
+    // Publishes general announcements
     resource function post announcements/general(string message) returns http:Ok|http:BadRequest {
         _ = publishEvent(NOTIFICATIONS_TOPIC, "ANNOUNCEMENT: " + message);
         log:printInfo("General announcement published: " + message);
