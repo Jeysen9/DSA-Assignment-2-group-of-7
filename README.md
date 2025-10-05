@@ -1,9 +1,4 @@
-# DSA-Assignment-2-group-of-7
-this repo is to complete assignment 2 which requires users to be able to concurrently book seats on a bus. we are required to apply docker, kafka and a database to complete this 
-# Smart Public Transport Ticketing System 🚌🎫
-
-A modern, distributed ticketing system for public transport built with Ballerina, featuring microservices architecture, event-driven communication, and containerized deployment.
-
+Smart Public Transport Ticketing System
 Group members:
 
 1.Joshua Madzimure, cybernust@gmail.com (219138451)
@@ -16,264 +11,261 @@ Group members:
 
 5.Alina N Daniel, alinadaniel.n@gmail.com (220045216)
 
-6.Beauty Masene, bmoonchino07@gmail.com  (220035687)
+6.Beauty Masene, bmoonchino07@gmail.com (220035687)
 
 7.Marcheline Matroos, 2000marcheline@gmail.com (220074291)
 
+A distributed microservices-based ticketing system for public transport built with Ballerina, featuring event-driven architecture with Kafka and SQL Server database.
+Project Overview
 
+This system provides a modern ticketing platform for public transport with the following key features:
 
-## 📋 Project Overview
+    Passenger registration and management
 
-This system replaces traditional paper-based ticketing with a scalable, fault-tolerant platform that handles passenger registration, ticket purchasing, payment processing, and real-time notifications. Designed for high concurrency during peak hours, it serves passengers, transport administrators, and vehicle validators.
+    Route and trip management
 
-### Key Features
-- **Passenger Management**: Account creation, login, and ticket viewing
-- **Route & Trip Management**: Create and manage transport schedules
-- **Ticket Lifecycle**: Complete ticket flow (CREATED → PAID → VALIDATED → EXPIRED)
-- **Payment Processing**: Simulated payment gateway integration
-- **Real-time Notifications**: Service updates and ticket status changes
-- **Admin Controls**: System management and announcements
+    Ticket purchasing and validation
 
-## 🏗️ System Architecture
+    Payment processing simulation
 
-### Microservices Structure
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│  Passenger      │    │   Transport      │    │    Ticketing    │
-│    Service      │    │     Service      │    │     Service     │
-│  (Port 8080)    │    │   (Port 8081)    │    │   (Port 8082)   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         └─────────────────────────────────────────────────┐
-                                     │                     │
-                                     ▼                     ▼
-┌─────────────────┐    ┌─────────────────────────────────────────┐
-│   Payment       │    │               KAFKA                    │
-│    Service      │◄───┤            Event Bus                   │
-│  (Port 8083)    │    │ ticket.requests, payments.processed,   │
-└─────────────────┘    │ schedule.updates, ticket.validations   │
-         │              └─────────────────────────────────────────┘
-         │                       │                     ▲
-         └───────────────────────┼─────────────────────┘
-                                 │
-                                 ▼
-┌─────────────────┐    ┌─────────────────┐
-│  Notification   │    │     Admin       │
-│    Service      │    │     Service     │
-│  (Port 8084)    │    │   (Port 8085)   │
-└─────────────────┘    └─────────────────┘
-```
+    Real-time notifications
 
-### Technology Stack
-- **Ballerina** - Main programming language for all services
-- **Kafka** - Event-driven communication between services
-- **SQL Server** - Persistent data storage
-- **Docker** - Containerization and orchestration
-- **REST APIs** - Service communication and external interfaces
+    Administrative controls
 
-## 🚀 Quick Start
+Technology Stack
 
-### Prerequisites
-- Docker Desktop
-- Ballerina Swan Lake 2201.8.0+
-- SQL Server (or use the provided Docker setup)
+    Ballerina - Main programming language
 
-### Installation & Running
+    Apache Kafka - Event-driven communication
 
-1. **Clone and setup infrastructure:**
-```bash
-# Start required services
-docker-compose up -d
+    SQL Server - Persistent data storage
 
-# Create Kafka topics
-chmod +x kafka-setup/create-topics.sh
-./kafka-setup/create-topics.sh
-```
+    Docker - Containerization
 
-2. **Build and run the application:**
-```bash
-# Build Ballerina project
-bal build
+    REST APIs - Service interfaces
 
-# Run the system
-bal run
-```
+Project Structure
+text
 
-3. **Verify services are running:**
-```bash
-curl http://localhost:8085/api/admin/health
-# Should return: "Admin Service is running smoothly"
-```
-
-## 🎯 How It Works
-
-### Complete Passenger Journey
-
-#### 1. **Passenger Registration**
-```ballerina
-// Passenger registers in the system
-POST /api/passengers/register
-{
-    "email": "john@example.com",
-    "password": "password123",
-    "firstName": "John",
-    "lastName": "Doe"
-}
-```
-
-#### 2. **Browse Available Routes**
-```ballerina
-// View all active transport routes
-GET /api/transport/routes
-// Returns available routes with fares and schedules
-```
-
-#### 3. **Purchase Ticket**
-```ballerina
-// Request a ticket for a trip
-POST /api/tickets/request
-{
-    "passengerId": 1,
-    "tripId": 1,
-    "price": 2.50,
-    "ticketType": "SINGLE_RIDE"
-}
-```
-
-#### 4. **Payment Processing** (Event-Driven)
-```ballerina
-// Kafka Event Flow:
-// 1. Ticketing Service → "ticket.requests" topic
-// 2. Payment Service processes payment → "payments.processed" topic  
-// 3. Ticketing Service updates ticket status to PAID
-// 4. Notification Service sends confirmation
-```
-
-#### 5. **Ticket Validation**
-```ballerina
-// Validate ticket when boarding
-POST /api/tickets/1/validate
-// Updates status to VALIDATED and notifies all services
-```
-
-### Event-Driven Communication
-
-The system uses Kafka topics for loose coupling between services:
-
-| Topic | Purpose | Producers | Consumers |
-|-------|---------|-----------|-----------|
-| `ticket.requests` | New ticket requests | Ticketing | Payment |
-| `payments.processed` | Payment confirmations | Payment | Ticketing, Notification |
-| `schedule.updates` | Route/trip changes | Transport, Admin | Notification |
-| `ticket.validations` | Ticket usage events | Ticketing | Notification |
-
-## 📁 Project Structure
-
-```
-smart-ticketing-system/
-├── Ballerina.toml          # Dependencies and package config
-├── main.bal                # Application entry point
-├── config.bal              # Configuration constants
-├── models.bal              # Data structures and types
-├── database.bal            # Database operations
-├── kafka_clients.bal       # Kafka producers/consumers
-├── services/               # Individual microservices
+dsa-project-2-final-version/
+├── Ballerina.toml
+├── config.bal
+├── database.bal
+├── kafka.bal
+├── main.bal
+├── services/
 │   ├── passenger_service.bal
 │   ├── transport_service.bal
 │   ├── ticketing_service.bal
 │   ├── payment_service.bal
 │   ├── notification_service.bal
 │   └── admin_service.bal
-├── docker-compose.yml      # Infrastructure setup
-└── kafka-setup/
-    └── create-topics.sh    # Kafka topic initialization
-```
+├── docker-compose.yml
+└── README.md
 
-## 🔧 API Endpoints
+Service Architecture
+Core Services
 
-### Passenger Service (`:8080`)
-- `POST /api/passengers/register` - Create new passenger account
-- `POST /api/passengers/login` - Passenger authentication
-- `GET /api/passengers` - List all passengers
-- `GET /api/passengers/{id}` - Get passenger details
+    Passenger Service (8080) - User registration and management
 
-### Transport Service (`:8081`)
-- `POST /api/transport/routes` - Create new transport route
-- `POST /api/transport/trips` - Schedule new trip
-- `GET /api/transport/routes` - Get all active routes
-- `PUT /api/transport/trips/{id}/status` - Update trip status
+    Transport Service (8081) - Route and trip management
 
-### Ticketing Service (`:8082`)
-- `POST /api/tickets/request` - Request new ticket
-- `POST /api/tickets/{id}/validate` - Validate ticket
-- `GET /api/tickets/passenger/{id}` - Get passenger's tickets
+    Ticketing Service (8082) - Ticket lifecycle management
 
-### Admin Service (`:8085`)
-- `POST /api/admin/announcements/disruption` - Publish service disruptions
-- `POST /api/admin/announcements/general` - Send general announcements
-- `GET /api/admin/health` - System health check
+    Admin Service (8085) - System administration and announcements
 
-## 🐳 Docker Deployment
+Background Services
 
-The system is fully containerized:
+    Payment Service - Processes ticket payments via Kafka
 
-```bash
-# Build and start all services
-docker-compose up --build
+    Notification Service - Handles system notifications via Kafka
 
-# View logs
-docker-compose logs -f
+Kafka Topics
 
-# Scale specific services
-docker-compose up --scale ticketing-service=3
-```
+    ticket.requests - New ticket purchase requests
 
-## 🎨 Key Design Patterns
+    payments.processed - Payment confirmation events
 
-### 1. **Microservices Architecture**
-Each service has a single responsibility and can be developed, deployed, and scaled independently.
+    schedule.updates - Route and schedule changes
 
-### 2. **Event-Driven Communication**
-Services communicate asynchronously via Kafka, ensuring:
-- Loose coupling between services
-- Fault tolerance (messages persist if services are down)
-- Scalability (multiple instances can process events)
+    ticket.validations - Ticket validation events
 
-### 3. **Database Per Service Pattern**
-Each service manages its own data while sharing the database instance, maintaining clear data boundaries.
+Database Schema
+Tables
 
-### 4. **Containerization**
-Docker provides consistent environments from development to production.
+    passengers - User accounts and information
 
-## 📊 Monitoring & Observability
+    routes - Transport routes with fares
 
-The system includes built-in logging and can be extended with:
-- **Ballerina Observability** - Built-in metrics and tracing
-- **Prometheus/Grafana** - Metrics collection and visualization
-- **Kafka Tool** - Monitor topic health and message flow
+    tickets - Ticket records with status tracking
 
-## 🔮 Future Enhancements
+Installation and Setup
+Prerequisites
 
-- [ ] Real-time seat reservations with concurrency control
-- [ ] Web dashboard for trip and ticket monitoring
-- [ ] Kubernetes deployment with auto-scaling
-- [ ] Integration with actual payment gateways
-- [ ] Mobile app with QR code validation
-- [ ] Predictive analytics for route optimization
+    Docker Desktop
 
-## 🤝 Contributing
+    Ballerina Swan Lake
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+    SQL Server (local instance)
 
-## 🙏 Acknowledgments
+Step 1: Configure Database
 
-- Ballerina Language for excellent distributed systems support
-- Apache Kafka for robust event streaming
-- Docker for seamless containerization
-- Windhoek City Council for the project inspiration
+Update config.bal with your SQL Server credentials:
+ballerina
 
+public const string DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=dsa;encrypt=false";
+public const string DB_USERNAME = "jeysen";
+public const string DB_PASSWORD = "your_password_here";
 
+Step 2: Start Infrastructure
+bash
+
+# Start Kafka and Zookeeper
+docker-compose up -d
+
+# Wait 60 seconds for services to start, then create Kafka topics
+docker exec -it dsa-project-2-final-version-kafka-1 kafka-topics --create --bootstrap-server localhost:9092 --topic ticket.requests --replication-factor 1 --partitions 1
+docker exec -it dsa-project-2-final-version-kafka-1 kafka-topics --create --bootstrap-server localhost:9092 --topic payments.processed --replication-factor 1 --partitions 1
+docker exec -it dsa-project-2-final-version-kafka-1 kafka-topics --create --bootstrap-server localhost:9092 --topic schedule.updates --replication-factor 1 --partitions 1
+docker exec -it dsa-project-2-final-version-kafka-1 kafka-topics --create --bootstrap-server localhost:9092 --topic ticket.validations --replication-factor 1 --partitions 1
+
+Step 3: Run Application
+bash
+
+# Build and run the Ballerina application
+bal run
+
+API Endpoints
+Passenger Service (8080)
+
+Register Passenger
+text
+
+POST /passengers/register?email=user@example.com&name=John Doe
+
+Get All Passengers
+text
+
+GET /passengers
+
+Transport Service (8081)
+
+Create Route
+text
+
+POST /transport/routes?origin=City Center&destination=Airport&fare=2.50
+
+Get All Routes
+text
+
+GET /transport
+
+Ticketing Service (8082)
+
+Request Ticket
+text
+
+POST /tickets/request?passengerId=1&routeId=1
+
+Validate Ticket
+text
+
+POST /tickets/validate/1
+
+Admin Service (8085)
+
+Send Announcement
+text
+
+POST /admin/announcements?message=Service Update
+
+Health Check
+text
+
+GET /admin/health
+
+Usage Example
+Complete Passenger Journey
+
+    Register Passenger
+
+bash
+
+curl -X POST "http://localhost:8080/passengers/register?email=john@example.com&name=John%20Doe"
+
+    Create Route
+
+bash
+
+curl -X POST "http://localhost:8081/transport/routes?origin=City%20Center&destination=Airport&fare=2.50"
+
+    Purchase Ticket
+
+bash
+
+curl -X POST "http://localhost:8082/tickets/request?passengerId=1&routeId=1"
+
+    Validate Ticket
+
+bash
+
+curl -X POST "http://localhost:8082/tickets/validate/1"
+
+    Send Announcement
+
+bash
+
+curl -X POST "http://localhost:8085/admin/announcements?message=Route%20delays%20expected"
+
+Event Flow
+
+    Ticket Request: Ticketing Service → ticket.requests topic
+
+    Payment Processing: Payment Service processes request → payments.processed topic
+
+    Notification: Notification Service listens to all events
+
+    Schedule Updates: Transport/Admin Services → schedule.updates topic
+
+    Ticket Validation: Ticketing Service → ticket.validations topic
+
+System Requirements
+
+    Minimum 4GB RAM
+
+    Docker Desktop with WSL2 backend (Windows)
+
+    SQL Server 2019 or later
+
+    Ballerina Swan Lake 2201.8.0+
+
+Troubleshooting
+Kafka Container Issues
+
+If Kafka stops immediately:
+
+    Check Docker Desktop has sufficient memory (4GB+)
+
+    Ensure ports 9092 and 2181 are available
+
+    Use docker logs dsa-project-2-final-version-kafka-1 to view errors
+
+Database Connection Issues
+
+    Verify SQL Server is running on localhost:1433
+
+    Check database credentials in config.bal
+
+    Ensure the dsa database exists
+
+Build Issues
+
+    Run bal clean before building
+
+    Verify all dependencies in Ballerina.toml
+
+    Check Ballerina version compatibility
+
+Development
+
+The system uses Ballerina's built-in HTTP services and Kafka clients for event-driven communication. Each service is independent and communicates asynchronously via Kafka topics.
