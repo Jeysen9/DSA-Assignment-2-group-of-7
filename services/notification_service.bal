@@ -4,9 +4,10 @@ import ballerina/log;
 
 // Kafka listener for various events
 public function startNotificationService() {
+//starts infinite loop 
     while true {
         var notifications = notificationsConsumer->poll(1000);
-        
+//checks whether the variable notifications actually contains an array of kafka records        
         if notifications is kafka:ConsumerRecord[] {
             foreach var record in notifications {
                 string message = check record.value;
@@ -30,7 +31,7 @@ public function startNotificationService() {
                     }
                 }
             }
-            _ = notificationsConsumer->commit();
+            _ = notificationsConsumer->commit(); //calls commit to acknowledge that the kafka maessages were handled successfully
         }
     }
 }
