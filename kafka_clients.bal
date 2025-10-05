@@ -2,7 +2,7 @@ import ballerina/kafka;
 
 // This file sets up Kafka producers and consumers for event-driven communication
 
-// Kafka producer for sending events to various topics
+// Create a Kafka producer instance that connects to the Kafka broker
 kafka:Producer kafkaProducer = check new (KAFKA_BROKER);
 
 // Function to publish events to Kafka topics
