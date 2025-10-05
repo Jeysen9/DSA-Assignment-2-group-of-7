@@ -4,6 +4,24 @@ this repo is to complete assignment 2 which requires users to be able to concurr
 
 A modern, distributed ticketing system for public transport built with Ballerina, featuring microservices architecture, event-driven communication, and containerized deployment.
 
+Group members:
+
+1.Joshua Madzimure, cybernust@gmail.com (219138451)
+
+2.Jeysen Nyandoro, jeysennyandoro@gmail.com (224002058)
+
+3.Rowan van Wyk, rjvanwyk@icloud.com (224002244)
+
+4.Geraldo Liebenberg, geraldo.liebenberg@gmail.com (220029326)
+
+5.Alina N Daniel, alinadaniel.n@gmail.com (220045216)
+
+6.Beauty Masene, bmoonchino07@gmail.com  (220035687)
+
+7.Marcheline Matroos, 2000marcheline@gmail.com (220074291)
+
+
+
 ## 📋 Project Overview
 
 This system replaces traditional paper-based ticketing with a scalable, fault-tolerant platform that handles passenger registration, ticket purchasing, payment processing, and real-time notifications. Designed for high concurrency during peak hours, it serves passengers, transport administrators, and vehicle validators.
