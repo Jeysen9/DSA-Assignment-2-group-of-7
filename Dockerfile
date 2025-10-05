@@ -1,7 +1,7 @@
-# Ballerina runtime image
+# Latest Ballerina runtime image
 FROM ballerina/ballerina-runtime:2201.8.0
 
-# Set working directory
+# Set primary working directory
 WORKDIR /home/ballerina
 
 # Copy the compiled BALX file
