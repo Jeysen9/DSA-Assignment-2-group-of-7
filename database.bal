@@ -6,7 +6,7 @@ import ballerina/java.jdbc;
 // Database client for SQL Server connection
 jdbc:Client dbClient = check new (DB_URL, DB_USERNAME, DB_PASSWORD);
 
-// Function to initialize the database tables
+// Function to initialize the SQL database tables
 public function initializeDatabase() returns error? {
     // Creates passengers table
     _ = check dbClient->execute(`
@@ -69,7 +69,7 @@ public function initializeDatabase() returns error? {
     log:printInfo("Database tables initialized successfully");
 }
 
-// Generic function to insert any record and return the generated ID
+// Generic functions to insert any record and return the generated ID
 public function insertRecord(string tableName, anydata record) returns int|error {
     sql:ParameterizedQuery query = `INSERT INTO ${tableName} VALUES (DEFAULT, ${record[1]}, ${record[2]}, ${record[3]}, ${record[4]}, ${record[5]})`;
     sql:ExecutionResult result = check dbClient->execute(query);
