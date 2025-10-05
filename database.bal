@@ -8,9 +8,9 @@ jdbc:Client dbClient = check new (DB_URL, DB_USERNAME, DB_PASSWORD);
 
 // Function to initialize the database tables
 public function initializeDatabase() returns error? {
-    // Create passengers table
+    // Creates passengers table
     _ = check dbClient->execute(`
-        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='passengers' AND xtype='U')
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='passengers' AND xtype='U')     // If it doesn’t exist, the table is created with appropriate columns
         CREATE TABLE passengers (
             id INT IDENTITY(1,1) PRIMARY KEY,
             email VARCHAR(255) UNIQUE NOT NULL,
@@ -18,14 +18,14 @@ public function initializeDatabase() returns error? {
             firstName VARCHAR(100),
             lastName VARCHAR(100),
             accountBalance DECIMAL(10,2) DEFAULT 0.0
-        )
-    `);
+    );
     
     // Create routes table
+    // Defines available travel routes between locations
     _ = check dbClient->execute(`
-        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='routes' AND xtype='U')
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='routes' AND xtype='U')     // If it doesn’t exist, the table is created with appropriate columns
         CREATE TABLE routes (
-            id INT IDENTITY(1,1) PRIMARY KEY,
+            id INT IDENTITY(1,1) PRIMARY KEY,    // Auto-incrementing route ID
             origin VARCHAR(100) NOT NULL,
             destination VARCHAR(100) NOT NULL,
             distance DECIMAL(10,2),
