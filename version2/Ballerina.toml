@@ -1,0 +1,17 @@
+[package]
+org = "smart_ticketing"
+name = "smart_ticketing_system"
+version = "1.0.0"
+
+[[platform.java11.dependency]]
+groupId = "com.microsoft.sqlserver"
+artifactId = "mssql-jdbc"
+version = "11.2.0.jre11"
+
+[dependencies]
+"ballerina/sql" = "1.6.0"
+"ballerina/java.jdbc" = "1.6.0"
+"ballerina/http" = "2.6.0"
+"ballerina/kafka" = "4.6.0"
+"ballerina/log" = "2.6.0"
+"ballerina/lang.runtime" = "0.0.1"
